@@ -1,8 +1,9 @@
 package batalha_naval;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,8 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.ImageIcon;
 
 public class PosicionarEmbarcacoes extends JFrame {
 
@@ -20,19 +21,14 @@ public class PosicionarEmbarcacoes extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtLetra;
 	private JTextField txtNumero;
+	private int ordemDosBarcos = 0;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PosicionarEmbarcacoes frame = new PosicionarEmbarcacoes();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	/*
+	 * public static void main(String[] args) { EventQueue.invokeLater(new
+	 * Runnable() { public void run() { try { PosicionarEmbarcacoes frame = new
+	 * PosicionarEmbarcacoes(); frame.setVisible(true); } catch (Exception e) {
+	 * e.printStackTrace(); } } }); }
+	 */
 
 	public PosicionarEmbarcacoes() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +39,7 @@ public class PosicionarEmbarcacoes extends JFrame {
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		//-----------------------------------------------------------------
 		JLabel lbTitulo = new JLabel("posicione as embarcações");
 		lbTitulo.setForeground(new Color(255, 0, 0));
 		lbTitulo.setFont(new Font("Tahoma", Font.BOLD, 26));
@@ -63,15 +59,15 @@ public class PosicionarEmbarcacoes extends JFrame {
 		contentPane.add(lblNumero);
 
 		txtLetra = new JTextField();
-		txtLetra.setBounds(220, 301, 111, 20);
+		txtLetra.setBounds(218, 352, 111, 20);
 		contentPane.add(txtLetra);
 		txtLetra.setColumns(10);
 
 		txtNumero = new JTextField();
 		txtNumero.setColumns(10);
-		txtNumero.setBounds(220, 351, 111, 20);
+		txtNumero.setBounds(218, 301, 111, 20);
 		contentPane.add(txtNumero);
-
+		//----------------------------------------------------------------------
 		JLabel lbColunas = new JLabel(
 				"  A       B        C       D       E        F       G        H        I         J");
 		lbColunas.setBounds(150, 73, 299, 14);
@@ -126,15 +122,48 @@ public class PosicionarEmbarcacoes extends JFrame {
 		lbLinha10.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbLinha10.setBounds(105, 270, 31, 14);
 		contentPane.add(lbLinha10);
+		//-------------------------------------------------------------------
+		JButton btnPosicionar = new JButton("Posicionar");
+		btnPosicionar.setBounds(353, 327, 99, 23);
+		contentPane.add(btnPosicionar);
+		btnPosicionar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				char letra = txtLetra.getText().charAt(0);
+				int numero = Integer.parseInt(txtNumero.getText());
+				String g = "ABCDEFGHIJ";
+				for (int i = 0; i < g.length(); i++) {
+					if(g.charAt(i) == letra) {
+						if(numero == 1) {
+							field[i].setBackground(Color.black);
+							break;
+						}else {
+							verificaEmbarcacao(Integer.parseInt((numero-1)+""+i));
+						}
+					}
+				}
+				txtLetra.setText("");
+				//txtNumero.setText("");
+			}
+		});
 
 		montaTabela();
 		montaDescricao();
 	}
-
-	public void mudaValor(int posicao) {
-
+	//------------------------------------------------------------------------------
+	private void verificaEmbarcacao(int posicao) {
+		if(ordemDosBarcos<5) {
+			field[posicao].setBackground(new Color(255, 0, 0));
+		}else if(ordemDosBarcos<13){
+			field[posicao].setBackground(new Color(0, 255, 0));			
+		}else if(ordemDosBarcos<22){
+			field[posicao].setBackground(new Color(0, 255, 255));			
+		}else if(ordemDosBarcos<30){
+			field[posicao].setBackground(new Color(255, 255, 0));			
+		}
+		ordemDosBarcos++;
 	}
-
+	//------------------------------------------------------------------------------
 	public void montaTabela() {// x + 30 ====== y + 20
 		int x = 145, y = 89, aux = 145;
 		field = new JTextField[100];
@@ -154,15 +183,23 @@ public class PosicionarEmbarcacoes extends JFrame {
 			}
 		}
 	}
-
+	//------------------------------------------------------------------------------
 	public void montaDescricao() {
 		JLabel lblNewLabel = new JLabel("ordens | embarcações| quantidade | nome");
 		lblNewLabel.setBounds(499, 73, 250, 14);
 		contentPane.add(lblNewLabel);
 		
-		JButton btnPosicionar = new JButton("Posicionar");
-		btnPosicionar.setBounds(353, 327, 99, 23);
-		contentPane.add(btnPosicionar);
+		JButton btnSair = new JButton("");
+		btnSair.setBackground(new Color(0, 153, 204));
+		btnSair.setIcon(new ImageIcon(PosicionarEmbarcacoes.class.getResource("/batalha_naval/Users-Exit-icon.png")));
+		btnSair.setBounds(729, 320, 79, 81);
+		contentPane.add(btnSair);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setBackground(new Color(0, 153, 204));
+		btnNewButton.setIcon(new ImageIcon(PosicionarEmbarcacoes.class.getResource("/batalha_naval/Accept-icon.png")));
+		btnNewButton.setBounds(645, 320, 79, 81);
+		contentPane.add(btnNewButton);
 		// ------------------------------------------------------------------
 		JLabel labelsOrdem[] = new JLabel[4];
 		int y = 100;

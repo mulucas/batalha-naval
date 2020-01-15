@@ -1,6 +1,5 @@
 package batalha_naval;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -46,7 +45,7 @@ public class Inicio extends JFrame {
 		JLabel lbBarquinho01 = new JLabel("");
 		lbBarquinho01.setHorizontalAlignment(SwingConstants.CENTER);
 		lbBarquinho01.setIcon(new ImageIcon(Inicio.class.getResource("/batalha_naval/barquinho.png")));
-		lbBarquinho01.setBounds(0, 282, 138, 93);
+		lbBarquinho01.setBounds(0, 271, 138, 93);
 		contentPane.add(lbBarquinho01);
 		
 		Panel pnMar = new Panel();
@@ -77,6 +76,8 @@ public class Inicio extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PosicionarEmbarcacoes embarcacoes = new PosicionarEmbarcacoes();
+				embarcacoes.setVisible(true);
+				dispose();
 			}
 		});
 	}

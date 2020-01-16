@@ -75,7 +75,7 @@ public class Inicio extends JFrame {
 		JogadorXJogador.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PosicionarEmbarcacoes embarcacoes = new PosicionarEmbarcacoes();
+				PosicionarEmbarcacoes embarcacoes = new PosicionarEmbarcacoes("jogador_1");
 				embarcacoes.setVisible(true);
 				dispose();
 			}

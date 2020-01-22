@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,7 +20,7 @@ import javax.swing.ImageIcon;
 
 public class PosicionarEmbarcacoes extends JFrame {
 
-	private JTextField field[];
+	private JTextField field[] = new JTextField[100];;
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtLetra;
@@ -94,7 +97,7 @@ public class PosicionarEmbarcacoes extends JFrame {
 						verificaEmbarcacao(Integer.parseInt((numero-1)+""+i));
 					}
 				}
-				txtLetra.setText("");
+				//txtLetra.setText("");
 				txtNumero.setText("");
 			}
 		});
@@ -105,11 +108,15 @@ public class PosicionarEmbarcacoes extends JFrame {
 	private void verificaEmbarcacao(int posicao) {
 		if(ordemDosBarcos<5) {
 			field[posicao].setBackground(new Color(255, 0, 0));
+			field[posicao].setText("5");
 		}else if(ordemDosBarcos<13){
+			field[posicao].setText("4");
 			field[posicao].setBackground(new Color(0, 255, 0));			
 		}else if(ordemDosBarcos<22){
+			field[posicao].setText("3");
 			field[posicao].setBackground(new Color(0, 255, 255));			
 		}else if(ordemDosBarcos<30){
+			field[posicao].setText("2");
 			field[posicao].setBackground(new Color(255, 255, 0));			
 		}
 		ordemDosBarcos++;
@@ -117,7 +124,6 @@ public class PosicionarEmbarcacoes extends JFrame {
 	//------------------------------------------------------------------------------
 	public void montaTabela() {// x + 30 ====== y + 20
 		int x = 145, y = 89, aux = 145;
-		field = new JTextField[100];
 		for (int i = 0; i < field.length; i++) {
 			field[i] = new JTextField();
 			field[i].setColumns(10);
@@ -166,15 +172,17 @@ public class PosicionarEmbarcacoes extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (ordemDosBarcos<30) {
-					System.out.println("nao terminou");
 					JOptionPane.showMessageDialog(null, "Voce ainda nao posicionaou todas as embarcacoes");
 				}else {
-					System.out.println("tem que gravar no txt");
+					gravar(nomeDoArquivo);
 					dispose();
-					if (nomeDoArquivo.equals("jogador_1")) {
-						PosicionarEmbarcacoes embarcacoes = new PosicionarEmbarcacoes("jogador_2");
-						embarcacoes.setVisible(true);						
-					}
+					//if (nomeDoArquivo.equals("jogador_1")) {
+					//	PosicionarEmbarcacoes embarcacoes = new PosicionarEmbarcacoes("jogador_2");
+					//	embarcacoes.setVisible(true);						
+					//}else {
+						JogadorXComputador computador = new JogadorXComputador();
+						computador.setVisible(true);
+					//}
 				}
 				
 			}
@@ -221,6 +229,23 @@ public class PosicionarEmbarcacoes extends JFrame {
 			labelsNomes[i].setBounds(705, y, 86, 14);
 			contentPane.add(labelsNomes[i]);
 			y += 20;
+		}
+	}
+
+	public void gravar(String arquivo){
+		try {
+			String path = System.getProperty("user.home");
+			FileWriter cria = new FileWriter(path + "//"+arquivo+".txt");
+			System.out.println(path + "//"+arquivo+".txt");
+			BufferedWriter gravarArq = new BufferedWriter(cria);
+			for (int i = 0; i < field.length; i++) {
+				gravarArq.write(field[i].getText());
+				gravarArq.newLine();
+			}
+			gravarArq.close();
+			cria.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

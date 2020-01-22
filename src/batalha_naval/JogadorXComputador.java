@@ -1,8 +1,11 @@
 package batalha_naval;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
@@ -23,18 +26,12 @@ public class JogadorXComputador extends JFrame {
 	private JTextField txtLetra;
 	private JTextField txtNumero;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JogadorXComputador frame = new JogadorXComputador();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	/*
+	 * public static void main(String[] args) { EventQueue.invokeLater(new
+	 * Runnable() { public void run() { try { JogadorXComputador frame = new
+	 * JogadorXComputador(); frame.setVisible(true); } catch (Exception e) {
+	 * e.printStackTrace(); } } }); }
+	 */
 
 	public JogadorXComputador() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +74,20 @@ public class JogadorXComputador extends JFrame {
 		JButton btnBomba = new JButton("");
 		btnBomba.setIcon(new ImageIcon(JogadorXComputador.class.getResource("/batalha_naval/Sem título.png")));
 		btnBomba.setBounds(348, 300, 111, 83);
-		contentPane.add(btnBomba);		
+		contentPane.add(btnBomba);
+		btnBomba.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				char letra = txtLetra.getText().charAt(0);
+				int numero = Integer.parseInt(txtNumero.getText());
+				String g = "ABCDEFGHIJ";
+				for (int i = 0; i < g.length(); i++) {
+					if(g.charAt(i) == letra) {
+						carregaDados(Integer.parseInt((numero-1)+""+i));
+					}
+				}
+			}
+		});
 
 		JLabel lbColunas = new JLabel(
 				"  A       B        C       D       E        F       G        H        I         J");
@@ -163,14 +173,39 @@ public class JogadorXComputador extends JFrame {
 			field[i].setEditable(false);
 			field[i].setBounds(x, y, 28, 20);
 			field[i].setBackground(Color.BLUE);
-			field[i].setForeground(Color.WHITE);
 			contentPane.add(field[i]);
-
+				
 			x += 30;
 			if ((i + 1) % 10 == 0) {
 				x = aux;
 				y += 20;
 			}
+		}
+	}
+	public void carregaDados(int posicao) {
+		try {
+			int i = 0;
+			String path = System.getProperty("user.home");
+			FileReader arquivo = new FileReader(path + "/jogador_1.txt");
+			BufferedReader lerArquivo = new BufferedReader(arquivo);
+			String linha = "";
+			//while ((linha = lerArquivo.readLine()) != null) {
+			for (int j = 0; j <= posicao; j++) {
+				linha = lerArquivo.readLine();
+			}
+			if (linha.equals("5")) {
+				field[posicao].setBackground(new Color(255, 0, 0));	
+			}else if(linha.equals("4")) {
+				field[posicao].setBackground(new Color(0, 255, 0));
+			}else if(linha.equals("3")) {
+				field[posicao].setBackground(new Color(0, 255, 255));
+			}else if(linha.equals("2")) {
+				field[posicao].setBackground(new Color(255, 255, 0));
+			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
